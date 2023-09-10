@@ -7,7 +7,6 @@ from imutils import face_utils
 
 import tkinter as tk
 from tkinter import filedialog
-from threading import Thread
 from face_texture import FaceTexture
 
 # for import, maybe develop into app later
