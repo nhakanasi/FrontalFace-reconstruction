@@ -1,18 +1,13 @@
 import numpy as np
-
 import os
 import cv2
 import dlib
 from imutils import face_utils
-
-import tkinter as tk
-from tkinter import filedialog
+from threading import Thread
 from face_texture import FaceTexture
 
 # for import, maybe develop into app later
-root = tk.Tk()
-root.withdraw()
-final = None
+
 class FacialCharactors:
 	def __init__(self,frame,index,pos):
 		self.frame = frame
@@ -67,7 +62,6 @@ def check_and_rename(file_name, file, add=0):
 
 		if not os.path.isfile(final):
 			cv2.imwrite(final,file)
-			print(final)
 		else:
 			add +=1
 			check_and_rename(final,file,add)
@@ -76,33 +70,31 @@ def check_and_rename(file_name, file, add=0):
 def obj_and_png(args):
 	frame,i,pos = args
 	facial = FacialCharactors(frame,i,pos)
-	print(facial.return_files())
 	FaceTexture(facial.return_files())
 
-class FaceReg2PNG:
+class FaceRegAndPNG:
 	# clean up process depend on format
-	def clean_up(self,format):
-		if format == "webcam":
+	def clean_up(self):
+		if self.file == None:
 			self.vc.release()
 			cv2.destroyAllWindows()
-		elif format == "images":
+		else:
 			cv2.destroyAllWindows()
 
 	# choose media
-	def media(self,format):
-		if format == "webcam":
-			return cv2.VideoCapture(0)
-		elif format == "images":
-			name = filedialog.askopenfilename() 
+	def media(self):
+		if self.file != None:
+			name = self.file
 			if name == "":
 				return None
 			else: 
 				return cv2.imread(name)
-
+		else:
+			return cv2.VideoCapture(0)
 	# run
-	def main(self,format):
-		self.vc = self.media(format)
-		if self.vc == None:
+	def main(self):
+		self.vc = self.media()
+		if type(self.vc) == None:
 			print("No media detected")
 			return 
 		
@@ -116,17 +108,19 @@ class FaceReg2PNG:
 		while True:
 
 			# grab the frame from video stream and resize
-			if format == "webcam":
+			if self.file:
+				frame = self.vc
+				
+			else:
 				ret, frame = self.vc.read()
 				if ret==False:
 					break
+			if(self.file):
+				frame = cv2.resize(frame,(frame.shape[1], frame.shape[0]))
 			else:
-				frame = self.vc
-			frame = cv2.flip(frame,1)
-			frame = cv2.resize(frame,(frame.shape[1], frame.shape[0]))
-
+				frame = cv2.resize(frame,(frame.shape[1]*2, frame.shape[0]*2))
 			# format
-			cv2.putText(frame, f"{format}", (0, 30),cv2.LINE_AA, 0.45, (0, 255, 0), 2)
+			cv2.putText(frame, "Press Q to quit", (0, 30),cv2.LINE_AA, 0.45, (0, 255, 0), 2)
 
 			# grab the frame dimensions and convert it to a blob
 			(h, w) = frame.shape[:2]
@@ -159,33 +153,28 @@ class FaceReg2PNG:
 				
 				pos = [x1,x2,y1,y2]
 				if cv2.waitKey(1) & 0xFF == ord('c') and run == False:
+					run = True
 					args = [frame,i,pos]
 					export = Thread(target=obj_and_png,args=[args])
+					cv2.putText(frame, "Running", (0, 70),cv2.LINE_AA, 0.45, (0, 255, 0), 2)
 					export.start()
 					export.join()
+					run = False
 
 			# show video
-			cv2.imshow('frame',frame)
+			cv2.imshow('FaceRecognizer',frame)
 
 			# quit using Q
 			if cv2.waitKey(1) & 0xFF == ord('q'):
 				break
 		
 		# clean up
-		self.clean_up(format)
+		self.clean_up()
 	
 	# choose mode
-	def __init__(self, format):
-		self.main(format)
+	def __init__(self, file = None):
+		self.file = file
+		self.main()
 
 if __name__ == "__main__":
-	options = ["images","webcam"]
-	print("""Choose format:
-       - Images
-       - Webcam""")
-	print("Media", end= ": ")
-	choice = input()
-	if choice.lower() in options:
-		FaceReg2PNG(choice)
-	else:
-		print("Not supported")
+	FaceRegAndPNG()
