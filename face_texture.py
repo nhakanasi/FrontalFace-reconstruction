@@ -33,10 +33,6 @@ class FaceTexture:
         (mesh, pose, shape_coeffs, blendshape_coeffs) = eos.fitting.fit_shape_and_pose(morphablemodel_with_expressions,
             landmarks, landmark_mapper, w, h, edge_topology, contour_landmarks, model_contour)
 
-        # Now you can use your favourite plotting/rendering library to display the fitted mesh, using the rendering
-        # parameters in the 'pose' variable.
-
-        # Or for example extract the texture map, like this:
         image_1 = cv2.cvtColor(image, cv2.COLOR_BGR2BGRA, 4)  # extract_texture(...) expects a 4-channel image
         texturemap = eos.render.extract_texture(mesh, pose, image_1)
         texture_name = check_and_rename("output/texture.png")
@@ -44,7 +40,6 @@ class FaceTexture:
         cv2.imwrite(texture_name,texturemap)
         eos.core.write_obj(mesh,obj_name)
         
-        # cv2.imwrite("sample.png",eos.render.draw_wireframe(image,mesh,pose.get_modelview(), pose.get_projection(),(0,h,w,-h)))
         self.stop()
 
     def stop(self):
