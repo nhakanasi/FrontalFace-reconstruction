@@ -1,0 +1,9 @@
+# Mode
+ENV: 'development'
+DEBUG: True
+TESTING: True
+
+# Device
+USE_CUDA: True # True: cuda; False:cpu
+DEVICE_ID: "0"
+
