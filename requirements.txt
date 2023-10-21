@@ -1,0 +1,12 @@
+numpy==1.23.5
+opencv-python
+opencv-contrib-python
+pyyaml
+onnx
+torchvision 
+onnxruntime
+matplotlib
+scipy
+Cython
+cmake
+dlib
