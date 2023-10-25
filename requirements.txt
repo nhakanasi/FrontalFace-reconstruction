@@ -10,3 +10,8 @@ scipy
 Cython
 cmake
 dlib
+PyQt5
+qt-thread-updater
+pygame
+PyOpenGL
+PyOpenGL_accelerate
