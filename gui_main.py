@@ -203,7 +203,7 @@ class MainGUI(QtWidgets.QDialog):
         self.capture  = cv2.VideoCapture(0)
         ret, self.frame = self.capture.read()
         if self.capture is None or not self.capture.isOpened():
-            self.show_Text.addItems(["Camera không hợp lệ !"])
+            self.show_Text.addItems(["Invalid Camera !"])
         else:
             self.show_Text.addItems(["Succesfully Open Camera !", "Please choose Capture"])
             self.timer = QTimer()
