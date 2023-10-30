@@ -11,6 +11,28 @@ RED = (0, 0, 255)
 GREEN = (0, 255, 0)
 BLUE = (255, 0, 0)
 
+def load_and_resize(img, dst_size):
+    """load an image and resize to the dst_size
+
+    Args:
+        img (array): input image
+        dst_size (tuple): (W, H)
+
+    Returns:
+        array: proccessed image
+    """
+    height, width = img.shape[:2]
+    scale = min(dst_size[0]/width, dst_size[1]/height)
+    new_size = (int(scale*height), int(scale*width))
+
+    out_img = cv2.resize(img, (new_size[1], new_size[0]))
+    delta_w = dst_size[0] - new_size[1]
+    delta_h = dst_size[1] - new_size[0]
+    top, bottom = delta_h//2, delta_h-(delta_h//2)
+    left, right = delta_w//2, delta_w-(delta_w//2)
+    out_img = cv2.copyMakeBorder(out_img, top, bottom, left, right, cv2.BORDER_CONSTANT, value=[255, 255, 255])
+
+    return out_img
 
 def get_suffix(filename):
     """a.jpg -> jpg"""
@@ -61,7 +83,7 @@ def calc_hypotenuse(pts):
     llength = sqrt((bbox[2] - bbox[0]) ** 2 + (bbox[3] - bbox[1]) ** 2)
     return llength / 3
 
-# Take in 2D landmarks cor -> calculate to create a bounding box -> create ROI box with the length and center of bounding box 
+
 def parse_roi_box_from_landmark(pts):
     """calc roi box from landmark"""
     bbox = [min(pts[0, :]), min(pts[1, :]), max(pts[0, :]), max(pts[1, :])]
@@ -81,7 +103,7 @@ def parse_roi_box_from_landmark(pts):
 
     return roi_box
 
-# same at step 1 and 2 -> increase ROI box by 50%
+
 def parse_roi_box_from_bbox(bbox):
     left, top, right, bottom = bbox[:4]
     old_size = (right - left + bottom - top) / 2
@@ -150,7 +172,7 @@ def draw_landmarks(img, pts, style='fancy', wfp=None, show_flag=False, **kwargs)
                          markeredgecolor=markeredgecolor, alpha=alpha)
     if wfp is not None:
         plt.savefig(wfp, dpi=150)
-        print(f'Save visualization result to {wfp}')
+        #print(f'Save visualization result to {wfp}')
 
     if show_flag:
         plt.show()

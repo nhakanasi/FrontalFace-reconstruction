@@ -44,7 +44,7 @@ def ser_to_ply_single(ver_lst, tri, height, wfp, reverse=True):
                 else:
                     f.write(f'3 {idx1} {idx2} {idx3}\n')
 
-        print(f'Dump tp {wfp_new}')
+        #print(f'Dump tp {wfp_new}')
 
 
 def ser_to_ply_multiple(ver_lst, tri, height, wfp, reverse=True):
@@ -78,7 +78,7 @@ def ser_to_ply_multiple(ver_lst, tri, height, wfp, reverse=True):
                 else:
                     f.write(f'3 {idx1 + offset} {idx2 + offset} {idx3 + offset}\n')
 
-    print(f'Dump tp {wfp}')
+    #print(f'Dump tp {wfp}')
 
 
 def get_colors(img, ver):
@@ -111,9 +111,9 @@ def ser_to_obj_single(img, ver_lst, tri, height, wfp):
                 idx1, idx2, idx3 = tri[i]  # m x 3
                 f.write(f'f {idx3 + 1} {idx2 + 1} {idx1 + 1}\n')
 
-        print(f'Dump tp {wfp_new}')
+        #print(f'Dump tp {wfp_new}')
 
-# saving multiple 3D objects from vertex lists and triangle indices to an OBJ file format.
+
 def ser_to_obj_multiple(img, ver_lst, tri, height, wfp):
     n_obj = len(ver_lst)  # count obj
 
@@ -131,16 +131,15 @@ def ser_to_obj_multiple(img, ver_lst, tri, height, wfp):
             for j in range(n_vertex):
                 x, y, z = ver[:, j]
                 f.write(
-                    f'v {x:.2f} {height - y:.2f} {z:.2f} {colors[j, 2]:.2f} {colors[j, 1]:.2f} {colors[j, 0]:.2f}\n') # Loops through vertices, writes position + texture color 
-                    # v x y z r g b for each vertex
-                    
+                    f'v {x:.2f} {height - y:.2f} {z:.2f} {colors[j, 2]:.2f} {colors[j, 1]:.2f} {colors[j, 0]:.2f}\n')
+
         for i in range(n_obj):
-            offset = i * n_vertex # Adds offset to vertex indices for multiple objects
+            offset = i * n_vertex
             for j in range(n_face):
                 idx1, idx2, idx3 = tri[j]  # m x 3
                 f.write(f'f {idx3 + 1 + offset} {idx2 + 1 + offset} {idx1 + 1 + offset}\n')
 
-    print(f'Dump tp {wfp}')
+    #print(f'Dump tp {wfp}')
 
 
 ser_to_ply = ser_to_ply_multiple  # ser_to_ply_single

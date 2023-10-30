@@ -26,10 +26,10 @@ def load_uv_coords(fp):
 
 
 def process_uv(uv_coords, uv_h=256, uv_w=256):
-    uv_coords[:, 0] = uv_coords[:, 0] * (uv_w - 1) # rescales the u coordinates
-    uv_coords[:, 1] = uv_coords[:, 1] * (uv_h - 1) # rescales the v coordinates
-    uv_coords[:, 1] = uv_h - uv_coords[:, 1] - 1 # So this flips it to match raster image coordinate convention
-    uv_coords = np.hstack((uv_coords, np.zeros((uv_coords.shape[0], 1), dtype=np.float32)))  # add z as 0
+    uv_coords[:, 0] = uv_coords[:, 0] * (uv_w - 1)
+    uv_coords[:, 1] = uv_coords[:, 1] * (uv_h - 1)
+    uv_coords[:, 1] = uv_h - uv_coords[:, 1] - 1
+    uv_coords = np.hstack((uv_coords, np.zeros((uv_coords.shape[0], 1), dtype=np.float32)))  # add z
     return uv_coords
 
 
@@ -78,7 +78,6 @@ def bilinear_interpolate(img, x, y):
 
 def uv_tex(img, ver_lst, tri, uv_h=256, uv_w=256, uv_c=3, show_flag=False, wfp=None):
     uv_coords = process_uv(g_uv_coords.copy(), uv_h=uv_h, uv_w=uv_w)
-    # Process the UV coordinates into a normalized 0-1 range.
 
     res_lst = []
     for ver_ in ver_lst:
@@ -93,7 +92,6 @@ def uv_tex(img, ver_lst, tri, uv_h=256, uv_w=256, uv_c=3, show_flag=False, wfp=N
 
     if wfp is not None:
         cv2.imwrite(wfp, res)
-        print(f'Save visualization result to {wfp}')
 
     if show_flag:
         plot_image(res)
