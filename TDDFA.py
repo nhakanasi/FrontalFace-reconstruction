@@ -61,8 +61,6 @@ class TDDFA(object):
             model = model.cuda(device=self.gpu_id)
 
         self.model = model
-        
-    
         self.model.eval()  # eval mode, fix BN
 
         # data normalization
@@ -112,7 +110,6 @@ class TDDFA(object):
                 end = time.time()
                 param = self.model(inp)
                 elapse = f'Inference: {(time.time() - end) * 1000:.1f}ms'
-                print(elapse)
             else:
                 param = self.model(inp)
 
@@ -122,30 +119,23 @@ class TDDFA(object):
             param_lst.append(param)
 
         return param_lst, roi_box_lst
-    
-    # Reconstructs 3D vertex positions for multiple ROI (personalize face model) 
+
     def recon_vers(self, param_lst, roi_box_lst, **kvs):
-        dense_flag = kvs.get('dense_flag', True)
+        dense_flag = kvs.get('dense_flag', False)
         size = self.size
 
         ver_lst = []
         for param, roi_box in zip(param_lst, roi_box_lst):
-            print(f"{param} \n {roi_box}")
-            if dense_flag: # mode to reconstruct landmarks by dense mode (3,38365) or sparse mode (3,68)
+            if dense_flag:
                 R, offset, alpha_shp, alpha_exp = _parse_param(param)
                 pts3d = R @ (self.bfm.u + self.bfm.w_shp @ alpha_shp + self.bfm.w_exp @ alpha_exp). \
                     reshape(3, -1, order='F') + offset
-                # print(type(pts3d))
-                # print(pts3d.shape)
-
                 pts3d = similar_transform(pts3d, roi_box, size)
             else:
                 R, offset, alpha_shp, alpha_exp = _parse_param(param)
                 pts3d = R @ (self.bfm.u_base + self.bfm.w_shp_base @ alpha_shp + self.bfm.w_exp_base @ alpha_exp). \
                     reshape(3, -1, order='F') + offset
                 pts3d = similar_transform(pts3d, roi_box, size)
-                # print(type(pts3d))
-                # print(pts3d.shape)
 
             ver_lst.append(pts3d)
 
