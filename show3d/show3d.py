@@ -16,7 +16,9 @@ def show_3dface(fobj):
     pygame.init()
     viewport = (800, 800)
     param.viewport = viewport
-    screen = pygame.display.set_mode(viewport, OPENGL | DOUBLEBUF)
+    # screen = pygame.display.set_mode(viewport, OPENGL | DOUBLEBUF)
+    screen = pygame.display.set_mode(viewport, pygame.DOUBLEBUF | pygame.OPENGL)
+
     param.screen = screen
 
     light.setup_lighting()
@@ -54,13 +56,13 @@ def show_3dface(fobj):
                 if e.type == QUIT:
                     pygame.quit()
                     running = False
-                    time.sleep(1)
+                    time.sleep(0.5)
                     # sys.exit(2)
                 if e.type == KEYDOWN:
                     if e.key == pygame.K_ESCAPE:
                         pygame.quit()
                         running = False
-                        time.sleep(1)
+                        time.sleep(0.5)
                         # sys.exit(2)
                         
                     elif e.key == pygame.K_4:
@@ -96,7 +98,7 @@ def show_3dface(fobj):
                         tx += i
                         ty -= j
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-
+            
             glLoadIdentity()
             glTranslate(tx / 20., ty / 20., - zpos)
             glRotate(ry / 5, 1, 0, 0)
@@ -112,7 +114,7 @@ def show_3dface(fobj):
                 draw_pos(param.pos3d)
             if running:
                 pygame.display.flip()
-    except SystemExit:
+    except:
         pygame.quit()
 
 
