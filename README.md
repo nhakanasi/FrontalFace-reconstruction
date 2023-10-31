@@ -66,4 +66,4 @@ Here's UI application
 * [Pygame](https://github.com/pygame/pygame)
 
 ## Contact
-**To Duy An **: **toduyand@gmail.com**.
+**To Duy An**: **toduyand@gmail.com**.
