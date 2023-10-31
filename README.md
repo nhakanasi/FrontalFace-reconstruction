@@ -41,7 +41,7 @@ cd ..
 ## Quick start
 Run example 
 ```
-python main.py
+python example.py
 ```
 The default input data is `./images/img1`, you can change your own input data by replacing line 17 of `main.py` ("images/img1.jpg").
 Output is stored at `./outputs/<yyyymmdd_hhmmss>`, which includes face landmark, face's texture and 3D face's obj file.
