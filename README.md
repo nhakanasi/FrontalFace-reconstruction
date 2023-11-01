@@ -59,6 +59,8 @@ Here's UI application
   <img src="imgs/UI_Apps.jpg" alt="samples" width="800px">
 </p>
 
+## Video Guide  
+[![3D Face Reconstruction](https://img.youtube.com/vi/7ttYZXlQ44k/0.jpg)](https://youtu.be/7ttYZXlQ44k)
 ## Acknowledgements
 * [Dlib](https://github.com/davisking/dlib)
 * Thanks for Jianzhu Guo's fantastic work [3DDFA_V2](https://github.com/cleardusk/3DDFA_V2)
